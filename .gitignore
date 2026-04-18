@@ -1,0 +1,13 @@
+# Environment – never commit real secrets
+.env
+.env.local
+.env.production
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+*.suo
+*.user

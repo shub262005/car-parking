@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Smart Car Parking Dashboard – real-time parking slot availability powered by Firebase." />
+  <title>Smart Parking System Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ===== HEADER ===== -->
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="header-icon" aria-hidden="true">
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="32" height="32" rx="8" fill="#2563EB"/>
+          <path d="M7 22V11a3 3 0 013-3h12a3 3 0 013 3v11" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+          <path d="M4 22h24" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+          <circle cx="10" cy="25" r="2" fill="#fff"/>
+          <circle cx="22" cy="25" r="2" fill="#fff"/>
+          <rect x="13" y="12" width="6" height="4" rx="1" fill="#93C5FD"/>
+        </svg>
+      </div>
+      <div>
+        <h1 class="site-title">Smart Parking System Dashboard</h1>
+        <p class="site-subtitle">Real-time slot availability &amp; monitoring</p>
+      </div>
+      <div class="live-badge" id="liveBadge">
+        <span class="pulse-dot"></span>
+        <span>LIVE</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- ===== LEGEND ===== -->
+  <div class="legend-bar">
+    <div class="legend-item">
+      <span class="legend-dot legend-dot--green"></span>
+      <span>Available</span>
+    </div>
+    <div class="legend-divider"></div>
+    <div class="legend-item">
+      <span class="legend-dot legend-dot--red"></span>
+      <span>Occupied</span>
+    </div>
+    <div class="legend-divider"></div>
+    <div class="legend-item">
+      <span class="legend-dot legend-dot--grey"></span>
+      <span>Static / Default</span>
+    </div>
+  </div>
+
+  <!-- ===== MAIN CONTENT ===== -->
+  <main class="parking-lot-wrapper">
+
+    <div class="parking-lot" id="parkingLot">
+
+      <!-- SECTION A (Left Side) -->
+      <section class="parking-section" aria-labelledby="section-a-title">
+        <div class="section-label-bar">
+          <div class="zone-badge badge-blue">Zone A</div>
+          <h2 class="zone-title" id="section-a-title">Section A</h2>
+          <span class="zone-meta" id="zoneAMeta">Loading…</span>
+        </div>
+        <div class="slot-grid-2col" id="zoneA">
+          <!-- 8 slots (4 rows × 2 cols) injected by JS -->
+        </div>
+      </section>
+
+      <!-- CENTER DIVIDER -->
+      <div class="center-divider"></div>
+
+      <!-- SECTION B (Right Side) -->
+      <section class="parking-section" aria-labelledby="section-b-title">
+        <div class="section-label-bar">
+          <div class="zone-badge badge-purple">Zone B</div>
+          <h2 class="zone-title" id="section-b-title">Section B</h2>
+          <span class="zone-meta" id="zoneBMeta">Loading…</span>
+        </div>
+        <div class="slot-grid-2col" id="zoneB">
+          <!-- 8 slots (4 rows × 2 cols) injected by JS -->
+        </div>
+      </section>
+
+    </div>
+
+  </main>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="site-footer">
+    <p>Connected to <strong>Firebase Realtime Database</strong> &mdash; Slots update live.</p>
+    <p class="footer-time" id="footerTime"></p>
+  </footer>
+
+  <!-- Firebase SDK (compat / CDN) -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,423 @@
+/* =========================================================
+   Smart Parking System Dashboard – style.css
+   Modern, professional, minimal aesthetic
+   Layout: 2 sections side-by-side, each 4 rows × 2 cols
+   ========================================================= */
+
+/* ── Design Tokens ── */
+:root {
+  --clr-bg:          #F0F4F8;
+  --clr-surface:     #FFFFFF;
+  --clr-border:      #E2E8F0;
+  --clr-text-primary:#1E293B;
+  --clr-text-muted:  #64748B;
+  --clr-accent-blue: #2563EB;
+  --clr-accent-purple:#7C3AED;
+
+  --clr-green-bg:    #DCFCE7;
+  --clr-green-border:#86EFAC;
+  --clr-green-text:  #166534;
+  --clr-green-dot:   #22C55E;
+
+  --clr-red-bg:      #FEE2E2;
+  --clr-red-border:  #FCA5A5;
+  --clr-red-text:    #991B1B;
+  --clr-red-dot:     #EF4444;
+
+  --clr-grey-bg:     #F8FAFC;
+  --clr-grey-border: #CBD5E1;
+  --clr-grey-text:   #475569;
+
+  --shadow-sm:  0 1px 3px rgba(0,0,0,.07), 0 1px 2px rgba(0,0,0,.05);
+  --shadow-md:  0 4px 12px rgba(0,0,0,.08), 0 2px 4px rgba(0,0,0,.05);
+  --shadow-lg:  0 10px 30px rgba(0,0,0,.10), 0 4px 8px rgba(0,0,0,.06);
+
+  --radius-sm:  6px;
+  --radius-md:  12px;
+  --radius-lg:  18px;
+
+  --transition: 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ── Reset ── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background-color: var(--clr-bg);
+  color: var(--clr-text-primary);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  line-height: 1.5;
+}
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+.site-header {
+  background: var(--clr-surface);
+  border-bottom: 1px solid var(--clr-border);
+  box-shadow: var(--shadow-sm);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.header-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 18px 24px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.header-icon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+}
+
+.site-title {
+  font-size: clamp(1.1rem, 2.5vw, 1.45rem);
+  font-weight: 800;
+  color: var(--clr-text-primary);
+  letter-spacing: -0.5px;
+}
+
+.site-subtitle {
+  font-size: 0.8rem;
+  color: var(--clr-text-muted);
+  margin-top: 2px;
+  font-weight: 500;
+}
+
+.live-badge {
+  margin-left: auto;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  background: #ECFDF5;
+  border: 1px solid #6EE7B7;
+  color: #065F46;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  padding: 5px 12px;
+  border-radius: 999px;
+}
+
+/* Pulsing dot */
+.pulse-dot {
+  width: 8px;
+  height: 8px;
+  background: #10B981;
+  border-radius: 50%;
+  position: relative;
+}
+.pulse-dot::before {
+  content: '';
+  position: absolute;
+  inset: -3px;
+  border-radius: 50%;
+  background: #10B981;
+  opacity: 0.4;
+  animation: pulse 1.8s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%,100% { transform: scale(1); opacity: 0.4; }
+  50%      { transform: scale(1.6); opacity: 0; }
+}
+
+/* =========================================================
+   LEGEND BAR
+   ========================================================= */
+.legend-bar {
+  max-width: 1200px;
+  margin: 20px auto 0;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.83rem;
+  font-weight: 500;
+  color: var(--clr-text-muted);
+}
+
+.legend-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.legend-dot--green  { background: var(--clr-green-dot); }
+.legend-dot--red    { background: var(--clr-red-dot); }
+.legend-dot--grey   { background: #94A3B8; }
+
+.legend-divider {
+  width: 1px;
+  height: 16px;
+  background: var(--clr-border);
+}
+
+/* =========================================================
+   PARKING LOT WRAPPER
+   ========================================================= */
+.parking-lot-wrapper {
+  max-width: 1200px;
+  margin: 24px auto 32px;
+  padding: 0 24px;
+  flex: 1;
+}
+
+.parking-lot {
+  background: var(--clr-surface);
+  border: 1px solid var(--clr-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
+  display: flex;
+  align-items: stretch;
+  overflow: hidden;
+  min-height: 480px;
+}
+
+/* =========================================================
+   PARKING SECTIONS (A & B)
+   ========================================================= */
+.parking-section {
+  flex: 1;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Section header bar */
+.section-label-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.zone-badge {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  text-transform: uppercase;
+}
+.badge-blue   { background: #DBEAFE; color: #1D4ED8; }
+.badge-purple { background: #EDE9FE; color: #6D28D9; }
+
+.zone-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--clr-text-primary);
+}
+
+.zone-meta {
+  margin-left: auto;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--clr-text-muted);
+  background: var(--clr-bg);
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--clr-border);
+  white-space: nowrap;
+}
+
+/* =========================================================
+   CENTER DIVIDER  (the vertical wall between sections)
+   ========================================================= */
+.center-divider {
+  width: 4px;
+  background: linear-gradient(180deg, var(--clr-border) 0%, #94A3B8 50%, var(--clr-border) 100%);
+  flex-shrink: 0;
+  position: relative;
+}
+.center-divider::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    180deg,
+    transparent 0px,
+    transparent 20px,
+    rgba(148,163,184,.25) 20px,
+    rgba(148,163,184,.25) 22px
+  );
+}
+
+/* =========================================================
+   SLOT GRID  (2 columns × 4 rows = 8 slots per section)
+   ========================================================= */
+.slot-grid-2col {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  flex: 1;
+}
+
+/* ── Single Slot Card ── */
+.slot {
+  position: relative;
+  border-radius: var(--radius-md);
+  padding: 18px 14px 14px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: default;
+  border: 2px solid transparent;
+  transition:
+    background-color var(--transition),
+    border-color var(--transition),
+    box-shadow var(--transition),
+    transform var(--transition);
+  /* Default state (static / grey) */
+  background-color: var(--clr-grey-bg);
+  border-color: var(--clr-grey-border);
+  min-height: 80px;
+}
+
+.slot:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0,0,0,.10);
+}
+
+/* Car icon inside slot */
+.slot-car-icon {
+  width: 36px;
+  height: 36px;
+  opacity: 0.6;
+  transition: opacity var(--transition);
+}
+.slot.occupied .slot-car-icon {
+  opacity: 1;
+}
+.slot.available .slot-car-icon {
+  opacity: 0.3;
+}
+
+/* Slot number label */
+.slot-number {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--clr-text-primary);
+  letter-spacing: 0.3px;
+}
+
+/* Status icon (small color indicator circle) */
+.slot-indicator {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #94A3B8;
+  transition: background-color var(--transition);
+}
+
+/* Status text */
+.slot-status {
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--clr-grey-text);
+  transition: color var(--transition);
+}
+
+/* ── State: empty / available ── */
+.slot.available {
+  background-color: var(--clr-green-bg);
+  border-color: var(--clr-green-border);
+}
+.slot.available .slot-number   { color: var(--clr-green-text); }
+.slot.available .slot-indicator{ background: var(--clr-green-dot); box-shadow: 0 0 0 3px rgba(34,197,94,.2); }
+.slot.available .slot-status   { color: var(--clr-green-text); }
+
+/* ── State: occupied ── */
+.slot.occupied {
+  background-color: var(--clr-red-bg);
+  border-color:     var(--clr-red-border);
+}
+.slot.occupied .slot-number    { color: var(--clr-red-text); }
+.slot.occupied .slot-indicator { background: var(--clr-red-dot); box-shadow: 0 0 0 3px rgba(239,68,68,.2); }
+.slot.occupied .slot-status    { color: var(--clr-red-text); }
+
+/* Firebase-connected slots get a subtle "live" corner tag */
+.slot.firebase-slot::after {
+  content: 'LIVE';
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  font-size: 0.55rem;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  color: #2563EB;
+  background: #DBEAFE;
+  padding: 2px 5px;
+  border-radius: 4px;
+}
+
+/* =========================================================
+   FOOTER
+   ========================================================= */
+.site-footer {
+  background: var(--clr-surface);
+  border-top: 1px solid var(--clr-border);
+  padding: 16px 24px;
+  text-align: center;
+  font-size: 0.8rem;
+  color: var(--clr-text-muted);
+  line-height: 1.8;
+  margin-top: auto;
+}
+.site-footer strong { color: var(--clr-text-primary); }
+.footer-time { font-weight: 600; color: var(--clr-accent-blue); margin-top: 2px; }
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+@media (max-width: 700px) {
+  .parking-lot {
+    flex-direction: column;
+  }
+  .center-divider {
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, var(--clr-border) 0%, #94A3B8 50%, var(--clr-border) 100%);
+  }
+  .center-divider::before {
+    background: repeating-linear-gradient(
+      90deg,
+      transparent 0px,
+      transparent 20px,
+      rgba(148,163,184,.25) 20px,
+      rgba(148,163,184,.25) 22px
+    );
+  }
+  .header-inner { gap: 10px; }
+  .site-title   { font-size: 1rem; }
+  .live-badge   { display: none; }
+  .slot-grid-2col { gap: 8px; }
+  .slot         { padding: 12px 8px; min-height: 65px; }
+  .slot-number  { font-size: 0.82rem; }
+  .slot-status  { font-size: 0.62rem; }
+  .parking-lot-wrapper { padding: 0 14px; }
+  .parking-section { padding: 16px; }
+}
