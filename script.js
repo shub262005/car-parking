@@ -59,6 +59,7 @@ function createSlotHTML(label, isFirebase = false) {
       <span class="slot-indicator"></span>
       <span class="slot-status">—</span>
       <span class="slot-book-hint">Click to Book</span>
+      <span class="slot-timer" style="display: none; font-family: monospace; font-size: 0.75rem; font-weight: bold; margin-top: 2px;"></span>
     </div>
   `;
 }
@@ -126,17 +127,20 @@ function applySlotState(slotLabel) {
 
   const statusEl = el.querySelector('.slot-status');
   const hintEl   = el.querySelector('.slot-book-hint');
+  const timerEl  = el.querySelector('.slot-timer');
 
   switch (state) {
     case 'available':
       el.classList.add('available');
       statusEl.textContent = 'Empty';
       if (hintEl) hintEl.style.display = '';
+      if (timerEl && !bookings[slotLabel]) timerEl.style.display = 'none';
       break;
     case 'occupied':
       el.classList.add('occupied');
       statusEl.textContent = 'Occupied';
       if (hintEl) hintEl.style.display = 'none';
+      if (timerEl && !bookings[slotLabel]) timerEl.style.display = 'none';
       break;
     case 'booked':
       el.classList.add('booked');
@@ -151,6 +155,7 @@ function applySlotState(slotLabel) {
     default:
       statusEl.textContent = '—';
       if (hintEl) hintEl.style.display = 'none';
+      if (timerEl && !bookings[slotLabel]) timerEl.style.display = 'none';
   }
 }
 
@@ -242,6 +247,13 @@ function openBookingModal(slotLabel) {
   document.getElementById('bookingTime').value  = existing ? existing.time  : defaultDateTime();
   document.getElementById('bookingDuration').value = existing ? existing.duration : '1';
 
+  const btnDelete = document.getElementById('btnDeleteBooking');
+  if (existing) {
+    btnDelete.style.display = 'block';
+  } else {
+    btnDelete.style.display = 'none';
+  }
+
   // Reset errors & show form
   clearErrors();
   form.hidden    = false;
@@ -331,6 +343,65 @@ function handleBookingSubmit(e) {
   setTimeout(closeBookingModal, 2500);
 }
 
+function handleCancelBooking() {
+  if (!currentSlot || !bookings[currentSlot]) return;
+  delete bookings[currentSlot];
+  saveBookings();
+  applySlotState(currentSlot);
+  updateMeta();
+  closeBookingModal();
+}
+
+function formatZ(n) { return n < 10 ? '0'+n : n; }
+
+function updateTimers() {
+  const now = new Date();
+  
+  Object.keys(bookings).forEach(slotLabel => {
+    const booking = bookings[slotLabel];
+    if (!booking) return;
+    
+    const startTime = new Date(booking.time);
+    const durationMs = parseInt(booking.duration || '1', 10) * 3600 * 1000;
+    const endTime = new Date(startTime.getTime() + durationMs);
+    
+    const el = document.getElementById(`slot-${slotLabel}`);
+    if (!el) return;
+    const timerSpan = el.querySelector('.slot-timer');
+    
+    if (now >= endTime) {
+      // Expired -> auto cancel
+      delete bookings[slotLabel];
+      saveBookings();
+      applySlotState(slotLabel);
+      updateMeta();
+      if (timerSpan) timerSpan.style.display = 'none';
+      if (currentSlot === slotLabel) closeBookingModal();
+    } else if (now >= startTime) {
+      // Active -> countdown
+      const diff = endTime - now;
+      const h = Math.floor(diff / 3600000);
+      const m = Math.floor((diff % 3600000) / 60000);
+      const s = Math.floor((diff % 60000) / 1000);
+      if (timerSpan) {
+        timerSpan.textContent = `${formatZ(h)}:${formatZ(m)}:${formatZ(s)}`;
+        timerSpan.style.display = 'block';
+        timerSpan.style.color = '#B91C1C';
+      }
+    } else {
+      // Future -> countdown to start
+      const diff = startTime - now;
+      const h = Math.floor(diff / 3600000);
+      const m = Math.floor((diff % 3600000) / 60000);
+      if (timerSpan) {
+        timerSpan.textContent = `Starts in ${h}h ${m}m`;
+        timerSpan.style.display = 'block';
+        timerSpan.style.color = '#C2410C';
+      }
+    }
+  });
+}
+
 // ── Footer Timestamp ──
 function updateFooterTime() {
   const el = document.getElementById('footerTime');
@@ -343,6 +414,8 @@ async function bootstrap() {
   renderSlots();
   updateFooterTime();
   setInterval(updateFooterTime, 30000);
+  setInterval(updateTimers, 1000);
+  updateTimers(); // initial call
 
   // Modal close triggers
   document.getElementById('modalClose').addEventListener('click', closeBookingModal);
@@ -356,6 +429,7 @@ async function bootstrap() {
 
   // Form submit
   document.getElementById('bookingForm').addEventListener('submit', handleBookingSubmit);
+  document.getElementById('btnDeleteBooking').addEventListener('click', handleCancelBooking);
 
   try {
     const res = await fetch('/api/config');
